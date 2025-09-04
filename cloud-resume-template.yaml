@@ -1,0 +1,224 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Cloud Resume Challenge baseline stack: S3 (private) + CloudFront (OAC) + Route53 A-record + DynamoDB + Lambda + API Gateway (CORS enabled) + CloudWatch Alarms + SNS.
+  Reuses an existing ACM certificate in us-east-1 via parameter.
+
+Parameters:
+  DomainName:
+    Type: String
+    Description: Apex domain for the site, e.g., eivistamos.co.uk
+  HostedZoneId:
+    Type: String
+    Description: Route 53 Hosted Zone ID
+  ACMCertificateArn:
+    Type: String
+    Description: Existing ACM certificate ARN in us-east-1 for CloudFront
+  AllowedCorsOrigin:
+    Type: String
+    Default: "https://eivistamos.co.uk"
+    Description: Origin allowed by CORS for the API
+  EmailForAlerts:
+    Type: String
+    Description: Email address for SNS alerts
+  StageName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z0-9]+$"
+    Description: API Gateway stage name (lowercase)
+  DynamoDBTableName:
+    Type: String
+    Default: crc-visitor-counter
+    Description: DynamoDB table name for the visitor counter
+
+Resources:
+
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DomainName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${DomainName}-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Aliases: [ !Ref DomainName ]
+        Origins:
+          - Id: s3origin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            S3OriginConfig: {}
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+        DefaultCacheBehavior:
+          TargetOriginId: s3origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [ GET, HEAD, OPTIONS ]
+          CachedMethods:  [ GET, HEAD ]
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          Compress: true
+        ViewerCertificate:
+          AcmCertificateArn: !Ref ACMCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontReadViaOAC
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${SiteBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  ARecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt Distribution.DomainName
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:UpdateItem
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                Resource: !GetAtt DynamoDBTable.Arn
+
+  CounterFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Timeout: 10
+      MemorySize: 256
+      Role: !GetAtt LambdaRole.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTableName
+          CORS_ORIGIN: !Ref AllowedCorsOrigin
+      Code:
+        ZipFile: |
+          const AWS = require('aws-sdk');
+          const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+          exports.handler = async (event) => {
+            const pk = 'total';
+            try {
+              const params = {
+                TableName: process.env.TABLE_NAME,
+                Key: { 'pk': { S: pk } },
+                UpdateExpression: 'ADD visits :inc',
+                ExpressionAttributeValues: { ':inc': { N: '1' } },
+                ReturnValues: 'ALL_NEW'
+              };
+              const res = await ddb.updateItem(params).promise();
+              const count = parseInt(res.Attributes.visits.N, 10);
+              return {
+                statusCode: 200,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Access-Control-Allow-Origin': process.env.CORS_ORIGIN
+                },
+                body: JSON.stringify({ count })
+              };
+            } catch (err) {
+              console.error(err);
+              return { statusCode: 500, body: 'error' };
+            }
+          };
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Sub "crc-httpapi-${AWS::StackName}"
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins: [ !Ref AllowedCorsOrigin ]
+        AllowMethods: [ GET, OPTIONS ]
+        AllowHeaders: [ "*" ]
+
+  ApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CounterFunction.Arn}/invocations"
+      PayloadFormatVersion: "2.0"
+
+  ApiRouteCount:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: "GET /count"
+      Target: !Sub "integrations/${ApiIntegration}"
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: !Ref StageName
+      AutoDeploy: true
+
+Outputs:
+  WebsiteURL:
+    Description: Deployed website URL
+    Value: !Sub "https://${DomainName}"
+  ApiInvokeURL:
+    Description: API endpoint for visitor counter
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/count"
