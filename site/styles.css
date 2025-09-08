@@ -1,0 +1,21 @@
+body {
+    max-width: 715px;
+    margin: auto;
+    font-family: 'Arial';
+}
+
+#header {
+    height: 40px;
+}
+
+#footer {
+    height: 40px;
+}
+
+h4 {
+    font-style: italic;
+}
+
+.rightAlign{
+    float:right;
+}

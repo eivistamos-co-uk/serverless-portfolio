@@ -1,34 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  Cloud Resume Challenge baseline stack: S3 (private) + CloudFront (OAC) + Route53 A-record + DynamoDB + Lambda + API Gateway (CORS enabled) + CloudWatch Alarms + SNS.
-  Reuses an existing ACM certificate in us-east-1 via parameter.
+  Cloud Resume Challenge stack: S3 (private) + CloudFront + Route53 + DynamoDB + Lambda (Python) + API Gateway (CORS) + CloudWatch + SNS.
 
 Parameters:
   DomainName:
     Type: String
-    Description: Apex domain for the site, e.g., eivistamos.co.uk
   HostedZoneId:
     Type: String
-    Description: Route 53 Hosted Zone ID
   ACMCertificateArn:
     Type: String
-    Description: Existing ACM certificate ARN in us-east-1 for CloudFront
   AllowedCorsOrigin:
     Type: String
-    Default: "https://eivistamos.co.uk"
-    Description: Origin allowed by CORS for the API
   EmailForAlerts:
     Type: String
-    Description: Email address for SNS alerts
   StageName:
     Type: String
     Default: prod
-    AllowedPattern: "^[a-z0-9]+$"
-    Description: API Gateway stage name (lowercase)
   DynamoDBTableName:
     Type: String
-    Default: crc-visitor-counter
-    Description: DynamoDB table name for the visitor counter
+    Default: visitor-counter
 
 Resources:
 
@@ -69,7 +59,7 @@ Resources:
           TargetOriginId: s3origin
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods: [ GET, HEAD, OPTIONS ]
-          CachedMethods:  [ GET, HEAD ]
+          CachedMethods: [ GET, HEAD ]
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Compress: true
         ViewerCertificate:
@@ -78,6 +68,17 @@ Resources:
           MinimumProtocolVersion: TLSv1.2_2021
         HttpVersion: http2
         PriceClass: PriceClass_100
+        CustomErrorResponses:
+          Quantity: 2
+          Items:
+            - ErrorCode: 403
+              ResponsePagePath: /error.html
+              ResponseCode: 403
+              ErrorCachingMinTTL: 10
+            - ErrorCode: 404
+              ResponsePagePath: /error.html
+              ResponseCode: 404
+              ErrorCachingMinTTL: 10
 
   SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -103,7 +104,7 @@ Resources:
       Name: !Ref DomainName
       Type: A
       AliasTarget:
-        HostedZoneId: Z2FDTNDATAQYW2
+        HostedZoneId: !Ref HostedZoneId
         DNSName: !GetAtt Distribution.DomainName
 
   DynamoDBTable:
@@ -125,7 +126,8 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal: { Service: lambda.amazonaws.com }
+            Principal:
+              Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
@@ -139,13 +141,15 @@ Resources:
                   - dynamodb:UpdateItem
                   - dynamodb:GetItem
                   - dynamodb:PutItem
-                Resource: !GetAtt DynamoDBTable.Arn
+                Resource:
+                  - !GetAtt DynamoDBTable.Arn
+
 
   CounterFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: nodejs20.x
-      Handler: index.handler
+      Runtime: python3.13
+      Handler: index.lambda_handler
       Timeout: 10
       MemorySize: 256
       Role: !GetAtt LambdaRole.Arn
@@ -154,44 +158,61 @@ Resources:
           TABLE_NAME: !Ref DynamoDBTableName
           CORS_ORIGIN: !Ref AllowedCorsOrigin
       Code:
-        ZipFile: |
-          const AWS = require('aws-sdk');
-          const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-          exports.handler = async (event) => {
-            const pk = 'total';
-            try {
-              const params = {
-                TableName: process.env.TABLE_NAME,
-                Key: { 'pk': { S: pk } },
-                UpdateExpression: 'ADD visits :inc',
-                ExpressionAttributeValues: { ':inc': { N: '1' } },
-                ReturnValues: 'ALL_NEW'
-              };
-              const res = await ddb.updateItem(params).promise();
-              const count = parseInt(res.Attributes.visits.N, 10);
-              return {
-                statusCode: 200,
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Access-Control-Allow-Origin': process.env.CORS_ORIGIN
-                },
-                body: JSON.stringify({ count })
-              };
-            } catch (err) {
-              console.error(err);
-              return { statusCode: 500, body: 'error' };
-            }
-          };
+        ZipFile: !Sub |
+          import json
+          import boto3
+          from decimal import Decimal
+
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table('${DynamoDBTableName}')
+
+          def lambda_handler(event, context):
+              try:
+                  key = {'pk': 'visitor_Count'}
+                  response = table.get_item(Key=key)
+                  if 'Item' not in response:
+                      table.put_item(Item={'pk': 'visitor_Count', 'count': 0})
+
+                  update_response = table.update_item(
+                      Key=key,
+                      UpdateExpression='ADD #c :inc',
+                      ExpressionAttributeNames={'#c': 'count'},
+                      ExpressionAttributeValues={':inc': 1},
+                      ReturnValues='UPDATED_NEW'
+                  )
+
+                  updated_count = int(update_response['Attributes']['count'])
+
+                  return {
+                      'statusCode': 200,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '${AllowedCorsOrigin}'
+                      },
+                      'body': json.dumps({'count': updated_count})
+                  }
+
+              except Exception as e:
+                  return {
+                      'statusCode': 500,
+                      'headers': {'Content-Type': 'application/json'},
+                      'body': json.dumps({'error': str(e)})
+                  }
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CounterFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
 
   HttpApi:
     Type: AWS::ApiGatewayV2::Api
     Properties:
-      Name: !Sub "crc-httpapi-${AWS::StackName}"
+      Name: !Sub "httpapi-${AWS::StackName}"
       ProtocolType: HTTP
       CorsConfiguration:
         AllowOrigins: [ !Ref AllowedCorsOrigin ]
-        AllowMethods: [ GET, OPTIONS ]
-        AllowHeaders: [ "*" ]
 
   ApiIntegration:
     Type: AWS::ApiGatewayV2::Integration
@@ -215,6 +236,56 @@ Resources:
       StageName: !Ref StageName
       AutoDeploy: true
 
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: Alert_Owner
+      Subscription:
+        - Endpoint: !Ref EmailForAlerts
+          Protocol: email
+
+  CloudWatchAlarmAPI:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: APIGatewayErrors
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopic
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref HttpApi
+      EvaluationPeriods: 1
+      MetricName: 5xx
+      Namespace: AWS/ApiGateway
+      Period: 300
+      Statistic: Sum
+      Threshold: 3.0
+      TreatMissingData: missing
+
+  CloudWatchAlarmLambda:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: LambdaErrors
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopic
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref CounterFunction
+        - Name: FunctionName
+          Value: !Ref CounterFunction
+      EvaluationPeriods: 1
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 300
+      Statistic: Sum
+      Threshold: 3.0
+      TreatMissingData: missing
+
 Outputs:
   WebsiteURL:
     Description: Deployed website URL
@@ -222,3 +293,8 @@ Outputs:
   ApiInvokeURL:
     Description: API endpoint for visitor counter
     Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/count"
+  CloudFrontDistId:
+    Description: "CloudFront Distribution ID for the site"
+    Value: !Ref Distribution
+    Export:
+      Name: CloudFrontDistId
