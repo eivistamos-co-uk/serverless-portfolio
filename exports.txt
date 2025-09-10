@@ -1,7 +1,0 @@
-export DOMAIN="staging.eivistamos.co.uk"
-export HZID="Z01374223BY20ME39S339"
-export ACM_ARN="arn:aws:acm:us-east-1:149536475647:certificate/21eae940-ba27-4673-8bd3-ae2da8b95900"
-export ALERT_EMAIL="eivistamos@gmail.com"
-export CORS_ORIGIN="https://$DOMAIN"
-export STAGE="prod"
-export TABLE="visitor-counter"
