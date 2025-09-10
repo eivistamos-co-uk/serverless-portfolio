@@ -69,8 +69,6 @@ Resources:
         HttpVersion: http2
         PriceClass: PriceClass_100
         CustomErrorResponses:
-          Quantity: 2
-          Items:
             - ErrorCode: 403
               ResponsePagePath: /error.html
               ResponseCode: 403
@@ -148,8 +146,9 @@ Resources:
   CounterFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: VisitorCounter
       Runtime: python3.13
-      Handler: index.lambda_handler
+      Handler: lambda_function.lambda_handler
       Timeout: 10
       MemorySize: 256
       Role: !GetAtt LambdaRole.Arn
@@ -158,46 +157,8 @@ Resources:
           TABLE_NAME: !Ref DynamoDBTableName
           CORS_ORIGIN: !Ref AllowedCorsOrigin
       Code:
-        ZipFile: !Sub |
-          import json
-          import boto3
-          from decimal import Decimal
-
-          dynamodb = boto3.resource('dynamodb')
-          table = dynamodb.Table('${DynamoDBTableName}')
-
-          def lambda_handler(event, context):
-              try:
-                  key = {'pk': 'visitor_Count'}
-                  response = table.get_item(Key=key)
-                  if 'Item' not in response:
-                      table.put_item(Item={'pk': 'visitor_Count', 'count': 0})
-
-                  update_response = table.update_item(
-                      Key=key,
-                      UpdateExpression='ADD #c :inc',
-                      ExpressionAttributeNames={'#c': 'count'},
-                      ExpressionAttributeValues={':inc': 1},
-                      ReturnValues='UPDATED_NEW'
-                  )
-
-                  updated_count = int(update_response['Attributes']['count'])
-
-                  return {
-                      'statusCode': 200,
-                      'headers': {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '${AllowedCorsOrigin}'
-                      },
-                      'body': json.dumps({'count': updated_count})
-                  }
-
-              except Exception as e:
-                  return {
-                      'statusCode': 500,
-                      'headers': {'Content-Type': 'application/json'},
-                      'body': json.dumps({'error': str(e)})
-                  }
+        S3Bucket: !ImportValue resume-challenge-website-backend-BucketName
+        S3Key: lambda_function.zip
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission

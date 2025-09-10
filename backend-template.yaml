@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Separate stack for the backend, to create S3 bucket for Lambda function.
+
+Parameters:
+  DomainName:
+    Type: String
+
+Resources:
+
+  BackendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${DomainName}-backend"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  BucketName:
+    Description: Created bucket name
+    Value: !Ref BackendBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketName"

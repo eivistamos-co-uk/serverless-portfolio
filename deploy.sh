@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+BACKENDSTACK=${BACKENDSTACK:-resume-challenge-website-backend}
+BACKENDTEMPLATE=${TEMPLATE:-backend-template.yaml}
+
 STACK=${STACK:-resume-challenge-website}
 TEMPLATE=${TEMPLATE:-cloud-resume-template.yaml}
 
@@ -12,7 +15,22 @@ TEMPLATE=${TEMPLATE:-cloud-resume-template.yaml}
 : "${STAGE:=prod}"
 : "${TABLE:=visitor-counter}"
 
-# Deploy CloudFormation stack
+# Deploy Backend CloudFormation stack
+aws cloudformation deploy \
+  --stack-name "$BACKENDSTACK" \
+  --template-file "$BACKENDTEMPLATE" \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --parameter-overrides \
+    DomainName="$DOMAIN"
+
+# Output backend stack results
+aws cloudformation describe-stacks --stack-name "$BACKENDSTACK" --query 'Stacks[0].Outputs' --output table
+
+# Sync backend folder to S3
+echo "Syncing backend/ folder to S3 bucket..."
+aws s3 sync ./backend s3://"${DOMAIN}-backend" --delete
+
+# Deploy Frontend CloudFormation stack
 aws cloudformation deploy \
   --stack-name "$STACK" \
   --template-file "$TEMPLATE" \
@@ -26,7 +44,7 @@ aws cloudformation deploy \
     StageName="$STAGE" \
     DynamoDBTableName="$TABLE"
 
-# Output stack results
+# Output frontend stack results
 aws cloudformation describe-stacks --stack-name "$STACK" --query 'Stacks[0].Outputs' --output table
 echo "Confirm SNS email subscription to receive alerts."
 
@@ -37,7 +55,7 @@ API_URL=$(aws cloudformation describe-stacks --stack-name "$STACK" \
 # Replace placeholder in script.js
 sed -i "s|{{API_URL}}|$API_URL|g" ./site/script.js
 
-# Sync site folder to S3 and invalidate CloudFront
+# Sync site folder to S3
 echo "Syncing site/ folder to S3 bucket..."
 aws s3 sync ./site s3://$DOMAIN --delete
 
