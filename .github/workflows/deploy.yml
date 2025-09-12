@@ -1,4 +1,4 @@
-name: Deploy static site
+name: Deploy Cloud Resume Challenge
 
 on:
   push:
@@ -7,23 +7,31 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
+    - name: Configure AWS
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Sync to S3
-      run: aws s3 sync ./site s3://${{ env.DOMAIN }} --delete
-      env:
-        DOMAIN: "staging.eivistamos.co.uk"
+    - name: Upload CloudFormation templates
+      run: |
+        aws s3 cp infra/ s3://${{ secrets.TEMPLATE_BUCKET }}/infra/ --recursive
 
-    - name: Invalidate CloudFront cache
-      run: aws cloudfront create-invalidation --distribution-id $CFID --paths "/*"
-      env:
-        CFID: "E10C4UIGFRF8KZ"
+    - name: Deploy infrastructure
+      run: |
+        aws cloudformation deploy \
+          --template-file infra/main.yaml \
+          --stack-name resume-challenge-website \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Sync frontend files
+      run: |
+        aws s3 sync frontend/ s3://${{ secrets.FRONTEND_BUCKET }}/ \
+          --delete \
+          --exact-timestamps

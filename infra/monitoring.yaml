@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Sub-stack for monitoring: CloudWatch + SNS.
+
+Parameters:
+  EmailForAlerts:
+    Type: String
+  HttpApi:
+    Type: String
+  CounterFunction:
+    Type: String
+
+Resources:
+
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: Alert_Owner
+      Subscription:
+        - Endpoint: !Ref EmailForAlerts
+          Protocol: email
+
+  CloudWatchAlarmAPI:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: APIGatewayErrors
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopic
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref HttpApi
+      EvaluationPeriods: 1
+      MetricName: 5xx
+      Namespace: AWS/ApiGateway
+      Period: 300
+      Statistic: Sum
+      Threshold: 3.0
+      TreatMissingData: missing
+
+  CloudWatchAlarmLambda:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: LambdaErrors
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopic
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref CounterFunction
+        - Name: FunctionName
+          Value: !Ref CounterFunction
+      EvaluationPeriods: 1
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 300
+      Statistic: Sum
+      Threshold: 3.0
+      TreatMissingData: missing

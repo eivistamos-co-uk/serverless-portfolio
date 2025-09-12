@@ -142,7 +142,6 @@ Resources:
                 Resource:
                   - !GetAtt DynamoDBTable.Arn
 
-
   CounterFunction:
     Type: AWS::Lambda::Function
     Properties:

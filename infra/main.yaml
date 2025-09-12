@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Main stack for orchestrating the sub-stacks.
+
+Parameters:
+
+  DomainName:
+    Type: String
+  TemplateBucket:
+    Type: String
+    Description: S3 bucket holding sub-stack templates and lambda.
+  EmailForAlerts:
+    Type: String
+  HostedZoneId:
+    Type: String
+  ACMCertificateArn:
+    Type: String
+  AllowedCorsOrigin:
+    Type: String
+  StageName:
+    Type: String
+    Default: prod
+  DynamoDBTableName:
+    Type: String
+    Default: visitor-counter
+
+
+Resources:
+
+  FrontendStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/frontend.yaml"
+      Parameters:
+        DomainName: !Ref DomainName
+
+  NetworkingStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: FrontendStack
+    Properties:
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/networking.yaml"
+      Parameters:
+        SiteBucketDomain: !GetAtt FrontendStack.Outputs.SiteBucketDomain
+        OriginAccessControlID: !GetAtt FrontendStack.Outputs.OriginAccessControlID
+        DomainName: !Ref DomainName
+        HostedZoneId: !Ref HostedZoneId
+        ACMCertificateArn: !Ref ACMCertificateArn
+
+  DatabaseStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/database.yaml"
+      Parameters:
+        DynamoDBTableName: !Ref DynamoDBTableName
+
+  BackendStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: DatabaseStack
+    Properties:
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/backend.yaml"
+      Parameters:
+        DynamoDBTableArn: !GetAtt DatabaseStack.Outputs.DynamoDBTableArn
+        TemplateBucket: !Ref TemplateBucket
+        AllowedCorsOrigin: !Ref AllowedCorsOrigin
+        StageName: !Ref StageName
+        DynamoDBTableName: !Ref DynamoDBTableName
+
+  MonitoringStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: BackendStack
+    Properties:
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/monitoring.yaml"
+      Parameters:
+        HttpApi: !GetAtt BackendStack.Outputs.HttpApi
+        CounterFunction: !GetAtt BackendStack.Outputs.CounterFunction
+        EmailForAlerts: !Ref EmailForAlerts
+
+Outputs:
+  WebsiteURL:
+    Description: Deployed website URL
+    Value: !Sub "https://${DomainName}"
+  ApiInvokeURL:
+    Description: API endpoint for visitor counter
+    Value: !GetAtt BackendStack.Outputs.ApiInvokeURL
+  CloudFrontDistId:
+    Description: "CloudFront Distribution ID for the site"
+    Value: !GetAtt NetworkingStack.Outputs.CloudFrontDistId

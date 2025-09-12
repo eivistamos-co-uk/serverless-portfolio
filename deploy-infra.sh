@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BACKENDSTACK=${BACKENDSTACK:-resume-challenge-website-backend}
-BACKENDTEMPLATE=${TEMPLATE:-backend-template.yaml}
-
 STACK=${STACK:-resume-challenge-website}
-TEMPLATE=${TEMPLATE:-cloud-resume-template.yaml}
+TEMPLATE_BUCKET=${TEMPLATE_BUCKET:-resume-challenge-website-templates}
+REGION=${REGION:-eu-west-2}
+
+TEMPLATE=${TEMPLATE:-infra/main.yaml}
 
 : "${DOMAIN:?Set DOMAIN, e.g., export DOMAIN=eivistamos.co.uk}"
 : "${HZID:?Set HZID (Route 53 Hosted Zone ID)}"
@@ -15,22 +15,24 @@ TEMPLATE=${TEMPLATE:-cloud-resume-template.yaml}
 : "${STAGE:=prod}"
 : "${TABLE:=visitor-counter}"
 
-# Deploy Backend CloudFormation stack
-aws cloudformation deploy \
-  --stack-name "$BACKENDSTACK" \
-  --template-file "$BACKENDTEMPLATE" \
-  --capabilities CAPABILITY_NAMED_IAM \
-  --parameter-overrides \
-    DomainName="$DOMAIN"
+# Check if template bucket exists
 
-# Output backend stack results
-aws cloudformation describe-stacks --stack-name "$BACKENDSTACK" --query 'Stacks[0].Outputs' --output table
+if ! aws s3api head-bucket --bucket $TEMPLATE_BUCKET 2>/dev/null; then
+    echo "Bucket $TEMPLATE_BUCKET does not exist. Creating..."
+    aws s3api create-bucket \
+        --bucket $TEMPLATE_BUCKET \
+        --region $REGION \
+        --create-bucket-configuration LocationConstraint=$REGION
+    echo "Bucket created."
+else
+    echo "Bucket $TEMPLATE_BUCKET already exists."
+fi
 
-# Sync backend folder to S3
-echo "Syncing backend/ folder to S3 bucket..."
-aws s3 sync ./backend s3://"${DOMAIN}-backend" --delete
+echo "Uploading templates and lambda to S3..."
+aws s3 cp infra/ s3://$TEMPLATE_BUCKET/infra/ --recursive --region $REGION
+aws s3 cp lambda/lambda_function.zip s3://$TEMPLATE_BUCKET/lambda/ --region $REGION
 
-# Deploy Frontend CloudFormation stack
+# Deploy Main CloudFormation stack
 aws cloudformation deploy \
   --stack-name "$STACK" \
   --template-file "$TEMPLATE" \
@@ -42,9 +44,10 @@ aws cloudformation deploy \
     AllowedCorsOrigin="$CORS_ORIGIN" \
     EmailForAlerts="$ALERT_EMAIL" \
     StageName="$STAGE" \
-    DynamoDBTableName="$TABLE"
+    DynamoDBTableName="$TABLE" \
+    TemplateBucket="$TEMPLATE_BUCKET"
 
-# Output frontend stack results
+# Output main stack results
 aws cloudformation describe-stacks --stack-name "$STACK" --query 'Stacks[0].Outputs' --output table
 echo "Confirm SNS email subscription to receive alerts."
 
@@ -52,12 +55,16 @@ echo "Confirm SNS email subscription to receive alerts."
 API_URL=$(aws cloudformation describe-stacks --stack-name "$STACK" \
           --query "Stacks[0].Outputs[?OutputKey=='ApiInvokeURL'].OutputValue" --output text)
 
-# Replace placeholder in script.js
-sed -i "s|{{API_URL}}|$API_URL|g" ./site/script.js
+echo "Preparing config.js..."
+sed "s|PLACEHOLDER|$API_URL|g" ./site/config.js > ./site/config.deploy.js
 
-# Sync site folder to S3
 echo "Syncing site/ folder to S3 bucket..."
 aws s3 sync ./site s3://$DOMAIN --delete
+
+echo "Overwriting config.js with API URL..."
+aws s3 cp ./site/config.deploy.js s3://$DOMAIN/config.js
+
+rm ./site/config.deploy.js
 
 # Get CloudFront Distribution ID from CloudFormation Outputs
 DIST_ID=$(aws cloudformation describe-stacks --stack-name "$STACK" \
