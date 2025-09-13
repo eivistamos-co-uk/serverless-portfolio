@@ -5,9 +5,30 @@ on:
     branches: [ "main" ]
 
 jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install cfn-lint
+        run: pip install cfn-lint
+
+      - name: Run CloudFormation lint
+        run: cfn-lint infra/*.yaml
+
+      - name: Validate CloudFormation template
+        run: aws cloudformation validate-template --template-body infra/main.yaml
+
+
   deploy:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
