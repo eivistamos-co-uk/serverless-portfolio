@@ -36,7 +36,6 @@ Resources:
 
   NetworkingStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn: FrontendStack
     Properties:
       TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/networking.yaml"
       Parameters:
@@ -55,7 +54,6 @@ Resources:
 
   BackendStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn: DatabaseStack
     Properties:
       TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/backend.yaml"
       Parameters:
@@ -67,7 +65,6 @@ Resources:
 
   MonitoringStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn: BackendStack
     Properties:
       TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/monitoring.yaml"
       Parameters:
