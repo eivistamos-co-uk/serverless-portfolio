@@ -30,8 +30,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body infra/main.yaml
+      - name: Validate all CloudFormation templates
+        run: |
+          for template in infra/*.yaml; do
+            echo "Validating $template"
+            aws cloudformation validate-template --template-body file://$template
+          done
 
 
   deploy:
