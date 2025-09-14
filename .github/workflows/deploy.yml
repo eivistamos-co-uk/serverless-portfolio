@@ -97,7 +97,7 @@ jobs:
       run: |
         aws cloudformation deploy \
           --stack-name ${{ env.STACK_NAME }} \
-          --template-url https://${{ env.TEMPLATE_BUCKET_NAME }}.s3.${{ env.AWS_REGION }}.amazonaws.com/infra/main.yaml \
+          --template-file infra/main.yaml \
           --capabilities CAPABILITY_NAMED_IAM \
           --parameter-overrides \
             DomainName="${{ env.DOMAIN_NAME }}" \
