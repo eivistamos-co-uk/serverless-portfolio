@@ -4,6 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  AWS_REGION: eu-west-2
+  TEMPLATE_BUCKET_NAME: resume-challenge-website-templates
+  STACK_NAME: resume-challenge-website
+  DOMAIN_NAME: staging.eivistamos.co.uk
+  STAGE_NAME: prod
+  DYNAMO_DB_TABLE_NAME: visitor-counter
+
 jobs:
 
   lint:
@@ -28,7 +36,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Validate all CloudFormation templates
         run: |
@@ -37,8 +45,7 @@ jobs:
             aws cloudformation validate-template --template-body file://$template
           done
 
-
-  deploy:
+  package:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -50,21 +57,80 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }}
 
-    - name: Upload CloudFormation templates
+    - name: Check/Create Template Bucket
       run: |
-        aws s3 cp infra/ s3://${{ secrets.TEMPLATE_BUCKET }}/infra/ --recursive
+        if ! aws s3api head-bucket --bucket ${{ env.TEMPLATE_BUCKET_NAME }} 2>/dev/null; then
+            echo "Bucket ${{ env.TEMPLATE_BUCKET_NAME }} does not exist. Creating..."
+            aws s3api create-bucket \
+                --bucket ${{ env.TEMPLATE_BUCKET_NAME }} \
+                --region ${{ env.AWS_REGION }}
+            echo "Bucket created."
+        else
+            echo "Bucket ${{ env.TEMPLATE_BUCKET_NAME }} already exists."
+        fi  
+
+    - name: Upload Templates
+      run: |
+        aws s3 cp infra/ s3://${{ env.TEMPLATE_BUCKET_NAME }}/infra/ --recursive --region ${{ env.AWS_REGION }}
+
+    - name: Upload Lambda
+      run: |
+        aws s3 cp lambda/lambda_function.zip s3://${{ env.TEMPLATE_BUCKET_NAME }}/lambda/ --region ${{ env.AWS_REGION }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: package
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Configure AWS
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Deploy infrastructure
       run: |
         aws cloudformation deploy \
-          --template-file infra/main.yaml \
-          --stack-name resume-challenge-website \
-          --capabilities CAPABILITY_NAMED_IAM
+          --stack-name ${{ env.STACK_NAME }} \
+          --template-url https://${{ env.TEMPLATE_BUCKET_NAME }}.s3.${{ env.AWS_REGION }}.amazonaws.com/infra/main.yaml \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --parameter-overrides \
+            DomainName="${{ env.DOMAIN_NAME }}" \
+            HostedZoneId="${{ secrets.HOSTED_ZONE_ID }}" \
+            ACMCertificateArn="${{ secrets.ACM_CERTIFICATE_ARN }}" \
+            AllowedCorsOrigin="https://${{ env.DOMAIN_NAME }}" \
+            EmailForAlerts="${{ secrets.EMAIL_FOR_ALERTS }}" \
+            StageName="${{ env.STAGE_NAME }}" \
+            DynamoDBTableName="${{ env.DYNAMO_DB_TABLE_NAME }}" \
+            TemplateBucket="${{ env.TEMPLATE_BUCKET_NAME }}"
 
-    - name: Sync frontend files
+    - name: Prepare API & Sync Site Files
       run: |
-        aws s3 sync site/ s3://${{ secrets.FRONTEND_BUCKET }}/ \
-          --delete \
-          --exact-timestamps
+        API_URL=$(aws cloudformation describe-stacks --stack-name "${{ env.STACK_NAME }}" \
+                  --query "Stacks[0].Outputs[?OutputKey=='ApiInvokeURL'].OutputValue" --output text)
+
+        echo "Preparing config.js..."
+        sed "s|PLACEHOLDER|$API_URL|g" ./site/config.js > ./site/config.deploy.js
+
+        echo "Syncing site/ folder to S3 bucket..."
+        aws s3 sync ./site s3://${{ env.DOMAIN_NAME }} --delete
+
+        echo "Overwriting config.js with API URL..."
+        aws s3 cp ./site/config.deploy.js s3://${{ env.DOMAIN_NAME }}/config.js
+
+        rm ./site/config.deploy.js
+
+    - name: Invalidate CloudFront Cache
+      run: |
+        DIST_ID=$(aws cloudformation describe-stacks --stack-name "${{ env.STACK_NAME }}" \
+                  --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistId'].OutputValue" --output text)
+
+        echo "Invalidating CloudFront cache..."
+        aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+
+        echo "Deployment + S3 sync complete. Site live at https://${{ env.DOMAIN_NAME }}"
