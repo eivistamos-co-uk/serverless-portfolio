@@ -65,7 +65,6 @@ jobs:
             echo "Bucket ${{ env.TEMPLATE_BUCKET_NAME }} does not exist. Creating..."
             aws s3api create-bucket \
                 --bucket ${{ env.TEMPLATE_BUCKET_NAME }} \
-                --region ${{ env.AWS_REGION }}
                 --create-bucket-configuration LocationConstraint=${{ env.AWS_REGION }}
             echo "Bucket created."
         else
