@@ -30,14 +30,14 @@ Resources:
   FrontendStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/frontend.yaml"
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/frontend.yaml"
       Parameters:
         DomainName: !Ref DomainName
 
   NetworkingStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/networking.yaml"
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/networking.yaml"
       Parameters:
         SiteBucketDomain: !GetAtt FrontendStack.Outputs.SiteBucketDomain
         OriginAccessControlID: !GetAtt FrontendStack.Outputs.OriginAccessControlID
@@ -48,14 +48,14 @@ Resources:
   DatabaseStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/database.yaml"
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/database.yaml"
       Parameters:
         DynamoDBTableName: !Ref DynamoDBTableName
 
   BackendStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/backend.yaml"
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/backend.yaml"
       Parameters:
         DynamoDBTableArn: !GetAtt DatabaseStack.Outputs.DynamoDBTableArn
         TemplateBucket: !Ref TemplateBucket
@@ -66,7 +66,7 @@ Resources:
   MonitoringStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infra/monitoring.yaml"
+      TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/monitoring.yaml"
       Parameters:
         HttpApi: !GetAtt BackendStack.Outputs.HttpApi
         CounterFunction: !GetAtt BackendStack.Outputs.CounterFunction

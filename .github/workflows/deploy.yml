@@ -34,7 +34,7 @@ jobs:
         run: pip install cfn-lint
 
       - name: Run CloudFormation lint
-        run: cfn-lint infra/*.yaml
+        run: cfn-lint infrastructure/*.yaml
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -44,7 +44,7 @@ jobs:
 
       - name: Validate all CloudFormation templates
         run: |
-          for template in infra/*.yaml; do
+          for template in infrastructure/*.yaml; do
             echo "Validating $template"
             aws cloudformation validate-template --template-body file://$template
           done
@@ -76,7 +76,7 @@ jobs:
 
     - name: Upload Templates
       run: |
-        aws s3 cp infra/ s3://${{ env.TEMPLATE_BUCKET_NAME }}/infra/ --recursive --region ${{ env.AWS_REGION }}
+        aws s3 cp infrastructure/ s3://${{ env.TEMPLATE_BUCKET_NAME }}/infrastructure/ --recursive --region ${{ env.AWS_REGION }}
 
     - name: Upload Lambda
       run: |
@@ -99,7 +99,7 @@ jobs:
       run: |
         aws cloudformation deploy \
           --stack-name ${{ env.STACK_NAME }} \
-          --template-file infra/main.yaml \
+          --template-file infrastructure/main.yaml \
           --capabilities CAPABILITY_NAMED_IAM \
           --parameter-overrides \
             DomainName="${{ env.DOMAIN_NAME }}" \
