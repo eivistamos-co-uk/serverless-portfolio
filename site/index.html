@@ -1,80 +1,141 @@
-<link rel="stylesheet" href="styles.css">
-
-<div id="header"></div>
-
-<div id="left"></div>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
 
 <body>
-    
-    <span><h1>Visitor Count:</h1><p id="count">Loading...</p></span>
+        
+    <header id="header">
+        
+        <h1>Eivis Tamos</h1>
+        <p>Technical Support Engineer | AWS Certified Solutions Architect – Associate</p>
+        <p>eivistamos@gmail.com</p>
+        <div class="button-group" style="float:right; position: sticky; top: 50;">
+            <button type="button" onclick="window.open('https://github.com/eivistamos-co-uk', '_blank')">GitHub</button>
+            <button type="button" onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">LinkedIn</button>
+        </div>
+        
+    </header>
 
-    <h1>Eivis Tamos - Re-iterating Workflow for Determining Least Privileges</h1>
+    <main>
 
-    <p>eivistamos@gmail.com | Bristol, United Kingdom | in/eivistamos/</p>
+        <div class="container">
 
-    <div id="workExperience">
+            <div class="left-column">
 
-        <h2>Work Experience</h2>
-        <hr>
-        <h3>Yantra Digital<span class="rightAlign">Bristol, United Kingdom</span></h3>
-        <h4>Application Support Analyst<span class="rightAlign">Oct. 2018 - Mar. 2022 (3yrs 6mos)</span></h4>
-        <ul>
-            <li>Investigated 125+ case updates daily involving international customer queries by researching,
-                responding, resolving, & delegating across 20+ project/ticket management boards in line with SLAs,
-                resulting in unified communications between stakeholders regarding statuses, timelines, & roadblocks.
-            </li>
-            <ul>
-                <li>Improved clarity on project status & support efficiency for a cross-functional agile team of 12 by
-                    proactively researching & implementing frameworks, restructuring processes, & utilising commands to
-                    automate workflows.</li>
-            </ul>
-            <li>Operated 5 bespoke SaaS ERP database web-based applications on multiple environments with 100,000+
-                entries as 1st & 2nd line support to determine root causes for reported issues & perform daily
-                application administration, testing solutions, & monitoring functions.</li>
-            <li>Created & updated 100+ knowledge base articles for internal & external customer reference & training
-                such as manuals, presentations, user flows/processes/procedures, & video guides.</li>
-        </ul>
+                <div id="cert" class ="card">
+                    <a href="https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d" target="_blank">
+                        <img class= "center" src="images/credly.png" alt="Credly Badge" style="width:100px;height:100px;">
+                    </a>
+                    <p>AWS Solutions Architect – Associate (2025)</p>
+                </div>
 
-        <h4>Requirements Engineer<span class="rightAlign">Oct. 2019 - Mar. 2022 (2yrs 6mos)</span></h4>
-        <ul>
-            <li>Elicited business requirements from customers & management to create specifications documentation for
-                the development of 50+ new or improved modules; involving creation of user flows & test cases.</li>
-            <ul>
-                <li>Designed 300+ wireframes, prototypes, mockups, iconography & thumbnails, digitised sketches, and
-                    email content & validated with product management & client for hand-off to the development team.
-                </li>
-            </ul>
-            <li>Tested, verified, & monitored deployments across 4 environments with the client against documentation,
-                providing feedback points to reduce errors.</li>
-        </ul>
+                <div class ="card">
+                    <h2>About Me</h2>
+                    <hr>
+                        
+                    <a href="https://www.linkedin.com/in/eivistamos" target="_blank">
+                        <img class= "center" src="images/me.png" alt="Profile Picture" style="width:200px;height:200px;">
+                    </a>
 
-        <h4>Head of Testing<span class="rightAlign">Sep. 2021 - Mar. 2022 (7mos)</span></h4>
-        <ul>
-            <li>Managed team of 5 software & hardware testers by coordinating assignment process for feedback
-                collection; including manual & automated testing.</li>
-            <li>Established 8 standard templates for the team for use in specific cases, reducing time to manually
-                create & increasing efficiency.</li>
-        </ul>
+                    <p>Delivered 6+ years of SaaS and systems support.</p>
+                    <p>Currently building and deploying serverless workloads on AWS, with experience across S3, CloudFront, API Gateway, Lambda, and DynamoDB. Skilled in infrastructure as code and CI/CD, applying automation to deliver secure and repeatable deployments.</p>
+                    <p>Actively transitioning into cloud engineering, leveraging a strong support background to design resilient, cloud-native systems.</p>
+                </div>
 
-    </div>
+            </div>
 
-    <div id="technical">
-        <h2>Technical</h2>
-        <hr>
-        <p>JIRA, Trello, Basecamp, Google Workspace, Gmail<br>Google Analytics, Firebase, Mailtrap<br>Axure RP, Adobe
-            XD<br>Laravel, PHP, HTML, CSS, Selenium IDE</p>
-    </div>
+            <div class="right-column">
 
-    <div id="education">
+                <div class ="card">
 
-        <h2>Education</h2>
-        <hr>
-        <h3>St Brendan's Sixth Form College<span class="rightAlign">Sep. 2016 - Jun. 2018</span></h3>
-        <p>Business, Computer Science, Use of Maths</p>
-    </div>
-    <script src="script.js"></script>
+                    <h2>This is a Serverless Website with CI/CD and IaC on AWS</h2>
+                    <hr>
+                    <p> A production-ready, serverless website deployed on AWS and automated through GitHub Actions. Showcases end-to-end cloud architecture by combining static hosting, serverless compute, API integration, monitoring, and infrastructure as code. Built to apply and demonstrate best practices in modern cloud development.</p>
+
+                    <div class ="project-card">
+
+                                <h3>1. Architecture</h3>
+                                <hr>
+                                <p>
+                                The architecture ensures global performance, scalability, and secure delivery: CloudFront accelerates static content, Route 53 provides custom domain management, and DynamoDB + Lambda handle dynamic traffic tracking.
+                                </p>
+
+                            </div>
+
+                    <div class ="project-card">
+
+                        <h4>2. High-Level Diagram <span><a href="images/architecture-overview.jpg" target="_blank">(Click to View)</a><span></h4>
+                        <hr>
+                        <br>
+                        <a href="images/architecture-overview.jpg" target="_blank">
+                            <img class= "center" src="images/architecture-overview.jpg" alt="High-Level Diagram">
+                        </a>
+
+                    </div>
+
+                    <div class ="project-card">
+
+                        <h4>3. Detailed Flow <span><a href="images/architecture-detailed.jpg" target="_blank">(Click to View)</a><span></h4>
+                        <hr>
+                        <br>
+                        <a href="images/architecture-detailed.jpg" target="_blank">
+                            <img class= "center" src="images/architecture-detailed.jpg" alt="Detailed Flow" style="width:100%">
+                        </a>
+                        
+                    </div>
+
+                    <div class ="project-card">
+
+                        <h3>4. Workflow</h3>
+                        <hr>
+                        <p>
+                        A GitHub Actions pipeline automates deployments, reducing manual errors and ensuring production consistency which are key practices for enterprise-scale cloud operations.
+                        </p>
+
+                    </div>
+
+                    <div class ="project-card">
+
+                        <h3>5. Counter</h3>
+                        <hr>
+                        <p id="count">Loading...</p>
+                        <p>
+                        A lightweight serverless app demonstrates event-driven design, showing how Lambda + DynamoDB integrate seamlessly for real-time features.
+                        </p>
+
+                    </div>
+
+                    <div class ="project-card">
+
+                        <h3>6. Lessons Learned</h3>
+                        <hr>
+                        <p>
+                        Designed and tested IAM policies for CI/CD pipelines, gaining hands-on experience balancing automation and security which are directly applicable to real-world cloud governance.
+                        </p>
+
+                    </div>
+
+                    <div class ="project-card">
+
+                        <h3>7. Links</h3>
+                        <hr>
+                        <div class="button-group" style="flex-wrap:wrap;">
+                            <button type="button" onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View GitHub Repository</button>
+                            <button type="button" onclick="window.open('https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d', '_blank')">Verify AWS Certification Badge</button>
+                            <button type="button" onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">Connect on LinkedIn</button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+                            <button id="sticky-button" type="button" onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View Repository</button>
+    </main>
 </body>
-
-<div id="right"></div>
-
-<div id="footer"></div>
