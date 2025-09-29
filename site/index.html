@@ -2,140 +2,217 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-        
-    <header id="header">
-        
-        <h1>Eivis Tamos</h1>
-        <p>Technical Support Engineer | AWS Certified Solutions Architect – Associate</p>
-        <p>eivistamos@gmail.com</p>
-        <div class="button-group" style="float:right; position: sticky; top: 50;">
-            <button type="button" onclick="window.open('https://github.com/eivistamos-co-uk', '_blank')">GitHub</button>
-            <button type="button" onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">LinkedIn</button>
+
+    <header>
+
+        <div></div>
+
+        <div class="button-group">
+
+            <a href="https://github.com/eivistamos-co-uk">
+                <button
+                    style="background: url(images/github.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                    class="button-mini" type="button"></button>
+            </a>
+
+            <a href="https://www.linkedin.com/in/eivistamos">
+                <button
+                    style="background: url(images/linkedin.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                    class="button-mini" type="button"></button>
+            </a>
+
         </div>
-        
+
     </header>
 
     <main>
 
-        <div class="container">
+        <div id="hero">
 
-            <div class="left-column">
+            <h1 style="text-align: center;">Eivis Tamos - AWS Certified Solutions Architect</h1>
+            <p>Serverless architecture with CI/CD and IaC - built on AWS.</p>
 
-                <div id="cert" class ="card">
-                    <a href="https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d" target="_blank">
-                        <img class= "center" src="images/credly.png" alt="Credly Badge" style="width:100px;height:100px;">
-                    </a>
-                    <p>AWS Solutions Architect – Associate (2025)</p>
+
+
+            <div class="button-group">
+
+                <a href="mailto:eivistamos@gmail.com">
+                    <button class="button-prio" type="button">Contact Me</button>
+                </a>
+
+                <button class="button-basic" type="button"
+                    onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View
+                    Code</button>
+
+            </div>
+
+        </div>
+
+        <div class="contents">
+
+            <div id="highlight-content" class="content">
+                <div style="display: flex; justify-content: space-between;">
+                <h2>Project Snapshot</h2>
+
                 </div>
 
-                <div class ="card">
-                    <h2>About Me</h2>
-                    <hr>
-                        
-                    <a href="https://www.linkedin.com/in/eivistamos" target="_blank">
-                        <img class= "center" src="images/me.png" alt="Profile Picture" style="width:200px;height:200px;">
+                <h3 style="margin-top:0px;">Serverless Website + CI/CD + IaC</h3>
+
+                <p><b>Role:</b> Architect & Developer<br><b>Tech:</b> CloudFormation, S3, CloudFront (OAC), API Gateway,
+                    Lambda, DynamoDB, GitHub Actions<br><b>Outcome:</b> Automated deployments + visitor counter +
+                    monitoring & alerts</p>
+
+                <a href="#project">
+                    <button class="button-basic" type="button">View Project Details</button>
+                </a>
+
+            </div>
+
+            <div class="content">
+                <div style="display: flex; justify-content: space-between;">
+                <h2>About Me</h2>
+                <div style="display: flex;">
+                                                    <a href="https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d" target="_blank">
+                        <img class="center-img" src="images/credly.png" alt="Credly Badge" style="width:100px;height:100px;border-width:0px;">
+                    </a>
+                                    <a href="https://www.linkedin.com/in/eivistamos" target="_blank">
+                        <img class="center-img" src="images/me.png" alt="Profile Picture" style="width:100px;height:100px;border-radius:100px;border-width:0px;">
+                    </a>
+                    </div>
+                </div>
+                <h3 style="margin-top:0px;">AWS Certified Solutions Architect</h3>
+                <p><b>6+ years</b> in SaaS support, now specialising in designing and automating serverless architectures.<br><b>Skills: </b>CloudFormation · GitHub Actions · S3 · CloudFront (OAC) · Lambda ·
+                    API Gateway · DynamoDB · CloudWatch · IAM</p>
+                <div class="button-group">
+
+                    <a href="mailto:eivistamos@gmail.com">
+                        <button class="button-basic" type="button">Email Me</button>
                     </a>
 
-                    <p>Delivered 6+ years of SaaS and systems support.</p>
-                    <p>Currently building and deploying serverless workloads on AWS, with experience across S3, CloudFront, API Gateway, Lambda, and DynamoDB. Skilled in infrastructure as code and CI/CD, applying automation to deliver secure and repeatable deployments.</p>
-                    <p>Actively transitioning into cloud engineering, leveraging a strong support background to design resilient, cloud-native systems.</p>
+                    <button class="button-basic" type="button"
+                        onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">View LinkedIn</button>
+
                 </div>
 
             </div>
 
-            <div class="right-column">
+        </div>
 
-                <div class ="card">
+            <div id="project" class="content">
 
-                    <h2>This is a Serverless Website with CI/CD and IaC on AWS</h2>
-                    <hr>
-                    <p> A production-ready, serverless website deployed on AWS and automated through GitHub Actions. Showcases end-to-end cloud architecture by combining static hosting, serverless compute, API integration, monitoring, and infrastructure as code. Built to apply and demonstrate best practices in modern cloud development.</p>
+                <h2>Project Case Study</h2>
 
-                    <div class ="project-card">
+                <h3>Overview</h3>
 
-                                <h3>1. Architecture</h3>
-                                <hr>
-                                <p>
-                                The architecture ensures global performance, scalability, and secure delivery: CloudFront accelerates static content, Route 53 provides custom domain management, and DynamoDB + Lambda handle dynamic traffic tracking.
-                                </p>
+                <p>Automated CI/CD using GitHub Actions and CloudFormation to deploy a static frontend on S3 + CloudFront with OAC.<br>Serverless backend: API Gateway → Lambda → DynamoDB powering a visitor counter.<br>Observability: centralised CloudWatch logs + SNS alerts for incidents.</p>
 
-                            </div>
+                <div class="project-grid">
 
-                    <div class ="project-card">
+                    <div id="architecture" class="project-card">
 
-                        <h4>2. High-Level Diagram <span><a href="images/architecture-overview.jpg" target="_blank">(Click to View)</a><span></h4>
-                        <hr>
-                        <br>
-                        <a href="images/architecture-overview.jpg" target="_blank">
-                            <img class= "center" src="images/architecture-overview.jpg" alt="High-Level Diagram">
+                        <h3>1. Architecture</h3>
+
+                        <p>
+                            The architecture ensures global performance, scalability, and secure delivery: CloudFront
+                            accelerates static content, Route 53 provides custom domain management, and DynamoDB +
+                            Lambda handle dynamic traffic tracking.
+                        </p>
+
+                    </div>
+                    
+                    <div id="diagram" class="project-card">
+
+                        <h4>2. High-Level Diagram <span><a href="images/architecture-overview.svg"
+                                    target="_blank">(Click to View)</a><span></h4>
+
+                        <p style="text-align: center;">This overview shows the core AWS services used, grouped by their role in the solution.</p>
+                        <a href="images/architecture-overview.svg" target="_blank">
+                            <img class="center-img" src="images/architecture-overview.svg" alt="High-Level Diagram">
                         </a>
+
 
                     </div>
 
-                    <div class ="project-card">
+                    <div id="detailed" class="project-card">
 
-                        <h4>3. Detailed Flow <span><a href="images/architecture-detailed.jpg" target="_blank">(Click to View)</a><span></h4>
-                        <hr>
-                        <br>
-                        <a href="images/architecture-detailed.jpg" target="_blank">
-                            <img class= "center" src="images/architecture-detailed.jpg" alt="Detailed Flow" style="width:100%">
+                        <h4>3. Detailed Flow <span><a href="images/architecture-detailed.svg" target="_blank">(Click to
+                                    View)</a><span></h4>
+
+                        <p style="text-align: center;">Covers CI/CD pipeline, request/response path, logging, and
+                            permissions.</p>
+                        <a href="images/architecture-detailed.svg" target="_blank">
+                            <img class="center-img" src="images/architecture-detailed.svg" alt="Detailed Flow"
+                                style="width:100%">
                         </a>
-                        
+
+
                     </div>
 
-                    <div class ="project-card">
+                    <div id="workflow" class="project-card">
 
                         <h3>4. Workflow</h3>
-                        <hr>
+
                         <p>
-                        A GitHub Actions pipeline automates deployments, reducing manual errors and ensuring production consistency which are key practices for enterprise-scale cloud operations.
+                            A GitHub Actions pipeline automates deployments, reducing manual errors and ensuring
+                            production consistency which are key practices for enterprise-scale cloud operations.
                         </p>
 
                     </div>
 
-                    <div class ="project-card">
+                    <div id="counter" class="project-card">
 
                         <h3>5. Counter</h3>
-                        <hr>
-                        <p id="count">Loading...</p>
+
+                        <p id="count">Visitor counter powered by Lambda + DynamoDB</p>
                         <p>
-                        A lightweight serverless app demonstrates event-driven design, showing how Lambda + DynamoDB integrate seamlessly for real-time features.
+                            A lightweight serverless app demonstrates event-driven design, showing how Lambda + DynamoDB
+                            integrate seamlessly for real-time features.
                         </p>
 
                     </div>
 
-                    <div class ="project-card">
+                    <div id="lessons" class="project-card">
 
                         <h3>6. Lessons Learned</h3>
-                        <hr>
-                        <p>
-                        Designed and tested IAM policies for CI/CD pipelines, gaining hands-on experience balancing automation and security which are directly applicable to real-world cloud governance.
-                        </p>
+
+                        <ul>
+                            <li>Built CI/CD pipeline to automatically deploy and validate stacks, reducing manual
+                                deployment time from hours to minutes.</li>
+                            <li>Diagnosed complex IAM policy issues, striking the right balance between automation and
+                                security whilst reducing failures.</li>
+                            <li>Improved observability by centralising logs in CloudWatch and adding SNS alerts to
+                                reduce Mean Time To Detect.</li>
+
+                        </ul>
 
                     </div>
 
-                    <div class ="project-card">
+                    <div id="links" class="project-card">
 
                         <h3>7. Links</h3>
-                        <hr>
+
                         <div class="button-group" style="flex-wrap:wrap;">
-                            <button type="button" onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View GitHub Repository</button>
-                            <button type="button" onclick="window.open('https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d', '_blank')">Verify AWS Certification Badge</button>
-                            <button type="button" onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">Connect on LinkedIn</button>
+                            <button class="button-basic" type="button"
+                                onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View
+                                GitHub Repository</button>
+                            <button class="button-basic" type="button"
+                                onclick="window.open('https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d', '_blank')">Verify
+                                AWS Certification Badge</button>
+                            <button class="button-basic" type="button"
+                                onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">Connect on
+                                LinkedIn</button>
                         </div>
                     </div>
-
                 </div>
-
-
-
             </div>
         </div>
-                            <button id="sticky-button" type="button" onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View Repository</button>
     </main>
 </body>
