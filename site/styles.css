@@ -86,12 +86,12 @@ header {
 }
 
 #highlight-content {
-    flex: 3; 
+    flex: 1; 
     border-left: 10px solid #0c0cff;
 }
 
 .content {
-    flex: 2; 
+    flex: 1; 
     background-color:#FFFFFF;
     padding: 40px;
     border-radius: 5px;
@@ -138,12 +138,12 @@ main {
 
 /* widths for desktop view */
 .left-column {
-    flex: 3; /* larger than left column */
+    flex: 1; /* larger than left column */
     gap: 30px;
 }
 
 .right-column {
-    flex: 2; /* takes up proportional space */
+    flex: 1; /* takes up proportional space */
     gap: 30px;
 }
 
@@ -168,7 +168,7 @@ h2 {
 }
 
 h3 {
-    font-size: 1.5em;
+    font-size: 1.75em;
 }
 
 h1,h2,h3,h4, a {
@@ -234,13 +234,13 @@ p, li{
     background-color: #fafafa;
 }
 
-.two {
-    background-color: #f8faff;
-}
-
-@media (max-width: 1024px) { /* Tablet */
+@media (max-width: 1200px) { /* Smaller Screens */
+    h1{
+        font-size: 3rem;
+    }
     h2{
         font-size: 1.7rem;
+        text-align:center;
     }
     h3 {
     font-size: 1.3em;
@@ -260,7 +260,65 @@ p, li{
         display: flex;
         flex-direction: column;
         align-items: center;
-        min-width:400px;
+    }
+    #about-me-intro {
+        flex-direction: column;
+        align-items: center;
+    }
+    #highlight-content {
+        border-top: 10px solid #0c0cff;
+        border-left: 0px;
+        height: fit-content;
+    }
+    .button-group {
+        justify-content: center;
+    }
+    #email-me-button {
+        background-color: #0c0cff;
+        border: none;
+        color: #fff;
+    }
+    .project-card {
+        border-left: 0px;
+        border-top: 5px solid #eeeeee;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 800px) { /* Smallerer Screens */
+    #highlights{
+        flex-direction: column;
+    }
+
+@media (max-width: 500px) { /* Smallest Screens */
+    h1{
+        font-size: 2rem;
+    }
+    h2{
+        font-size: 1.3rem;
+        text-align:center;
+    }
+    h3 {
+    font-size: 1.1em;
+    text-align:center;
+    }
+    p, li {
+        font-size: 1rem;
+        line-height: 2;
+    }
+    .button-prio {
+        font-size: 1rem;
+    }
+    .button-basic {
+        font-size: 1rem;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
     }
     #about-me-intro {
         flex-direction: column;
@@ -280,60 +338,21 @@ p, li{
     }
     .project-card {
         border-left: 0px;
-        border-top: 5px solid #eeeeee;
+        border-top: 0px;
         align-items: center;
         display: flex;
         flex-direction: column;
-    }
-}
+        margin-top: 0px;
 
-@media (max-width: 550px) { /* Mobile */
-    h1{
-        font-size: 2.2rem;
     }
-    h2{
-        font-size: 1.7rem;
+    #hero{
+        margin: 0px;
+        margin-bottom: 50px;
     }
-    h3 {
-    font-size: 1.3em;
-    text-align:center;
+    #project-intro{
+        margin:30px;
     }
-    p, li {
-        font-size: 1.25rem;
-        line-height: 2;
-    }
-    .button-prio {
-        font-size: 1.25rem;
-    }
-    .button-basic {
-        font-size: 1.25rem;
-    }
-    .content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    #about-me-intro {
-        flex-direction: column;
-        align-items: center;
-    }
-    #highlight-content {
-        border-top: 10px solid #0c0cff;
-        border-left: 0px;
-    }
-    .button-group {
-        justify-content: center;
-    }
-    #email-me-button, #project-details-button {
-        background-color: #0c0cff;
-        border: none;
-        color: #fff;
-    }
-    .project-card {
-        border-left: 0px;
-        border-top: 5px solid #eeeeee;
-        align-items: center;
-        display: flex;
-        flex-direction: column;
+    #project{
+        padding:0px;
     }
 }
