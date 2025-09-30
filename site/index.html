@@ -1,4 +1,5 @@
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,14 +36,16 @@
 
     <main>
 
+
         <div id="hero">
 
-            <h1 style="text-align: center;">Eivis Tamos - AWS Certified Solutions Architect</h1>
-            <p>Serverless architecture with CI/CD and IaC - built on AWS.</p>
+            <h1 style="text-align: center;">Eivis Tamos</h1>
+            <h2 style="text-align: center; margin-top:0px;">AWS Certified Solutions Architect</h2>
+            <p style="text-align: center;">Serverless architecture with CI/CD and IaC - built on AWS</p>
 
 
 
-            <div class="button-group">
+            <div class="button-group" style="justify-content: center;">
 
                 <a href="mailto:eivistamos@gmail.com">
                     <button class="button-prio" type="button">Contact Me</button>
@@ -56,7 +59,7 @@
 
         </div>
 
-        <div class="contents">
+        <div id="highlights" class="contents">
 
             <div id="highlight-content" class="content">
                 <div style="display: flex; justify-content: space-between;">
@@ -64,41 +67,44 @@
 
                 </div>
 
-                <h3 style="margin-top:0px;">Serverless Website + CI/CD + IaC</h3>
+                <h3>Serverless Website + CI/CD + IaC</h3>
 
                 <p><b>Role:</b> Architect & Developer<br><b>Tech:</b> CloudFormation, S3, CloudFront (OAC), API Gateway,
                     Lambda, DynamoDB, GitHub Actions<br><b>Outcome:</b> Automated deployments + visitor counter +
                     monitoring & alerts</p>
 
                 <a href="#project">
-                    <button class="button-basic" type="button">View Project Details</button>
+                    <button id="project-details-button" class="button-basic" type="button">View Project Details</button>
                 </a>
 
             </div>
 
             <div class="content">
-                <div style="display: flex; justify-content: space-between;">
+                <div id="about-me-intro">
                 <h2>About Me</h2>
-                <div style="display: flex;">
+                <div style="display: flex; align-items: center;">
                                                     <a href="https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d" target="_blank">
-                        <img class="center-img" src="images/credly.png" alt="Credly Badge" style="width:100px;height:100px;border-width:0px;">
+                        <img src="images/credly.png" alt="Credly Badge" style="width:100px;height:100px;border-width:0px;">
                     </a>
                                     <a href="https://www.linkedin.com/in/eivistamos" target="_blank">
-                        <img class="center-img" src="images/me.png" alt="Profile Picture" style="width:100px;height:100px;border-radius:100px;border-width:0px;">
+                        <img src="images/me.png" alt="Profile Picture" style="width:90px;height:90px;border-radius:100px;border-width:0px;">
                     </a>
                     </div>
                 </div>
-                <h3 style="margin-top:0px;">AWS Certified Solutions Architect</h3>
+                <h3>AWS Certified Solutions Architect</h3>
                 <p><b>6+ years</b> in SaaS support, now specialising in designing and automating serverless architectures.<br><b>Skills: </b>CloudFormation · GitHub Actions · S3 · CloudFront (OAC) · Lambda ·
                     API Gateway · DynamoDB · CloudWatch · IAM</p>
                 <div class="button-group">
 
                     <a href="mailto:eivistamos@gmail.com">
-                        <button class="button-basic" type="button">Email Me</button>
+                        <button id="email-me-button" class="button-basic" type="button">Email Me</button>
                     </a>
 
                     <button class="button-basic" type="button"
                         onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">View LinkedIn</button>
+                    
+                    <button class="button-basic" type="button"
+                        onclick="window.open('https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d', '_blank')">Verify Badge</button>
 
                 </div>
 
@@ -106,17 +112,18 @@
 
         </div>
 
+
             <div id="project" class="content">
 
                 <h2>Project Case Study</h2>
 
                 <h3>Overview</h3>
 
-                <p>Automated CI/CD using GitHub Actions and CloudFormation to deploy a static frontend on S3 + CloudFront with OAC.<br>Serverless backend: API Gateway → Lambda → DynamoDB powering a visitor counter.<br>Observability: centralised CloudWatch logs + SNS alerts for incidents.</p>
+                <p><b>Automated CI/CD</b> using GitHub Actions and CloudFormation to deploy a static frontend on S3 + CloudFront with OAC.<br><b>Serverless backend:</b> API Gateway → Lambda → DynamoDB powering a visitor counter.<br><b>Observability:</b> centralised CloudWatch logs + SNS alerts for incidents.</p>
 
                 <div class="project-grid">
 
-                    <div id="architecture" class="project-card">
+                    <div id="architecture" class="project-card one">
 
                         <h3>1. Architecture</h3>
 
@@ -128,35 +135,39 @@
 
                     </div>
                     
-                    <div id="diagram" class="project-card">
+                    <div id="diagram" class="project-card two">
 
-                        <h4>2. High-Level Diagram <span><a href="images/architecture-overview.svg"
-                                    target="_blank">(Click to View)</a><span></h4>
+                        <h3>2. High-Level Diagram</h3>
 
-                        <p style="text-align: center;">This overview shows the core AWS services used, grouped by their role in the solution.</p>
+                        <p>This overview shows the core AWS services used, grouped by their role in the solution.</p>
                         <a href="images/architecture-overview.svg" target="_blank">
                             <img class="center-img" src="images/architecture-overview.svg" alt="High-Level Diagram">
                         </a>
-
+                        <br>
+                        <a href="images/architecture-overview.svg">
+                            <button class="button-basic" type="button">View Diagram</button>
+                        </a>
 
                     </div>
 
-                    <div id="detailed" class="project-card">
+                    <div id="detailed" class="project-card one">
 
-                        <h4>3. Detailed Flow <span><a href="images/architecture-detailed.svg" target="_blank">(Click to
-                                    View)</a><span></h4>
+                        <h3>3. Detailed Flow </h3>
 
-                        <p style="text-align: center;">Covers CI/CD pipeline, request/response path, logging, and
+                        <p>Covers CI/CD pipeline, request/response path, logging, and
                             permissions.</p>
                         <a href="images/architecture-detailed.svg" target="_blank">
                             <img class="center-img" src="images/architecture-detailed.svg" alt="Detailed Flow"
                                 style="width:100%">
                         </a>
-
+                        <br>
+                        <a href="images/architecture-detailed.svg">
+                            <button class="button-basic" type="button">View Diagram</button>
+                        </a>
 
                     </div>
 
-                    <div id="workflow" class="project-card">
+                    <div id="workflow" class="project-card two">
 
                         <h3>4. Workflow</h3>
 
@@ -167,7 +178,7 @@
 
                     </div>
 
-                    <div id="counter" class="project-card">
+                    <div id="counter" class="project-card one">
 
                         <h3>5. Counter</h3>
 
@@ -179,7 +190,7 @@
 
                     </div>
 
-                    <div id="lessons" class="project-card">
+                    <div id="lessons" class="project-card two">
 
                         <h3>6. Lessons Learned</h3>
 
@@ -195,20 +206,21 @@
 
                     </div>
 
-                    <div id="links" class="project-card">
+                    <div id="links" class="project-card one">
 
                         <h3>7. Links</h3>
 
                         <div class="button-group" style="flex-wrap:wrap;">
+                             <button id="connect-on-linkedin" class="button-prio" type="button"
+                                onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">Connect on
+                                LinkedIn</button>
                             <button class="button-basic" type="button"
                                 onclick="window.open('https://github.com/eivistamos-co-uk/cloud-resume-challenge', '_blank')">View
                                 GitHub Repository</button>
                             <button class="button-basic" type="button"
                                 onclick="window.open('https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d', '_blank')">Verify
                                 AWS Certification Badge</button>
-                            <button class="button-basic" type="button"
-                                onclick="window.open('https://www.linkedin.com/in/eivistamos', '_blank')">Connect on
-                                LinkedIn</button>
+
                         </div>
                     </div>
                 </div>
