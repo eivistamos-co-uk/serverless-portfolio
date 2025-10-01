@@ -1,13 +1,23 @@
-<link rel="stylesheet" href="styles.css">
+<!DOCTYPE html>
+<html lang="en">
 
-<div id="header"></div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
 
-<div id="left"></div>
+<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background-color: #f3faff; margin:0; text-align: center;">
 
-<body>
-    <h1>Something went wrong...</h1>
+    <h1 style="font-size: 4rem; margin-bottom: 10px;">404</h1>
+    <h2 style="font-size: 2rem; margin-bottom: 20px;">Something went wrong...</h2>
+    <p style="font-size: 1.5rem; margin-bottom: 30px;">The page you're looking for doesn't exist.</p>
+
+    <button class="button-prio" type="button" onclick="window.location.href='index.html'">
+        Go Back Home
+    </button>
+
 </body>
 
-<div id="right"></div>
-
-<div id="footer"></div>
+</html>

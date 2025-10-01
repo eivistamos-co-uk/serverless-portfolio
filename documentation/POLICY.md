@@ -44,7 +44,7 @@ Restrict this to only the specific roles created for this project:
 ---
 
 ## The Policy
-
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -209,3 +209,4 @@ Restrict this to only the specific roles created for this project:
         }
     ]
 }
+```

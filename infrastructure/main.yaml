@@ -1,28 +1,35 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  Main stack for orchestrating the sub-stacks.
+  Main stack orchestrating sub-stacks for frontend, networking, backend, database, and monitoring.
 
 Parameters:
 
   DomainName:
     Type: String
+    Description: Domain name for the website (used in Route 53 and CloudFront)
   TemplateBucket:
     Type: String
     Description: S3 bucket holding sub-stack templates and lambda.
   EmailForAlerts:
     Type: String
+    Description: Email to receive CloudWatch/SNS alerts
   HostedZoneId:
     Type: String
+    Description: Route 53 hosted zone ID for domain
   ACMCertificateArn:
     Type: String
+    Description: ACM certificate ARN for HTTPS on CloudFront
   AllowedCorsOrigin:
     Type: String
+    Description: Origin allowed for CORS on API Gateway
   StageName:
     Type: String
     Default: prod
+    Description: Deployment stage name for backend API
   DynamoDBTableName:
     Type: String
     Default: visitor-counter
+    Description: Name of DynamoDB table used by visitor counter Lambda
 
 
 Resources:
@@ -33,6 +40,7 @@ Resources:
       TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/frontend.yaml"
       Parameters:
         DomainName: !Ref DomainName
+  # Sub-stack deploying static frontend to S3 with CloudFront OAC
 
   NetworkingStack:
     Type: AWS::CloudFormation::Stack
@@ -44,6 +52,7 @@ Resources:
         DomainName: !Ref DomainName
         HostedZoneId: !Ref HostedZoneId
         ACMCertificateArn: !Ref ACMCertificateArn
+  # Sub-stack managing CloudFront, Route 53, ACM, and DNS
 
   DatabaseStack:
     Type: AWS::CloudFormation::Stack
@@ -51,6 +60,7 @@ Resources:
       TemplateURL: !Sub "https://${TemplateBucket}.s3.${AWS::Region}.amazonaws.com/infrastructure/database.yaml"
       Parameters:
         DynamoDBTableName: !Ref DynamoDBTableName
+  # Sub-stack creating DynamoDB table for visitor counter
 
   BackendStack:
     Type: AWS::CloudFormation::Stack
@@ -62,6 +72,7 @@ Resources:
         AllowedCorsOrigin: !Ref AllowedCorsOrigin
         StageName: !Ref StageName
         DynamoDBTableName: !Ref DynamoDBTableName
+  # Sub-stack deploying serverless backend (API Gateway + Lambda) for visitor counter
 
   MonitoringStack:
     Type: AWS::CloudFormation::Stack
@@ -71,14 +82,18 @@ Resources:
         HttpApi: !GetAtt BackendStack.Outputs.HttpApi
         CounterFunction: !GetAtt BackendStack.Outputs.CounterFunction
         EmailForAlerts: !Ref EmailForAlerts
+  # Sub-stack configuring CloudWatch alarms and SNS notifications
 
 Outputs:
   WebsiteURL:
     Description: Deployed website URL
     Value: !Sub "https://${DomainName}"
+    # Output for end-user website URL
   ApiInvokeURL:
     Description: API endpoint for visitor counter
     Value: !GetAtt BackendStack.Outputs.ApiInvokeURL
+    # Output for programmatic access to Lambda via API Gateway
   CloudFrontDistId:
     Description: "CloudFront Distribution ID for the site"
     Value: !GetAtt NetworkingStack.Outputs.CloudFrontDistId
+    # Output for CloudFront distribution ID (useful for invalidations or monitoring)
