@@ -7,4 +7,4 @@
   - database.yaml
   - monitoring.yaml
 - Parent `main.yaml` references them using S3 URLs in deployed templates bucket.
-- Automated upload + deploy with `deploy-infra.sh`.
+- Automated upload + deploy with `.github\workflows\deploy.yml`

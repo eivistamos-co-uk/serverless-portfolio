@@ -1,13 +1,13 @@
 ## Architecture Overview
 
-This project demonstrates a full cloud-native personal resume website built on AWS.  
+This project demonstrates a full cloud-native personal portfolio website built on AWS.  
 Two diagrams are provided: one for non-technical readers, and one for technical readers.
 
 ---
 
 ## Services Overview (Non-Technical Diagram)
 
-![Overview Diagram](documentation/architecture-overview.jpg)
+![Overview Diagram](site/images/architecture-overview.svg)
 
 - **S3 (Storage):** Holds website files, templates, and Lambda code  
 - **CloudFront (CDN):** Delivers content quickly and securely worldwide  
@@ -23,7 +23,7 @@ Two diagrams are provided: one for non-technical readers, and one for technical 
 
 ## Detailed Flow (Technical Diagram)
 
-![Detailed Flow Diagram](documentation/architecture-detailed.jpg)
+![Detailed Flow Diagram](site/images/architecture-detailed.svg)
 
 1. **Frontend**  
    - Website assets in S3 are distributed through CloudFront  

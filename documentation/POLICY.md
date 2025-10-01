@@ -39,3 +39,173 @@ The workflow needs `iam:PassRole` so that CloudFormation can attach IAM roles (f
 Restrict this to only the specific roles created for this project:
 ```json
 "Resource": "arn:aws:iam::<account-id>:role/resume-challenge-*"
+```
+
+---
+
+## The Policy
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CloudFormationDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:ValidateTemplate",
+                "cloudformation:DescribeStacks",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:DeleteStack",
+                "cloudformation:CreateStack",
+                "cloudformation:GetTemplateSummary",
+                "cloudformation:UpdateStack"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "S3Deploy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:PutBucketVersioning",
+                "s3:GetObject",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:DeleteBucket",
+                "s3:PutBucketPolicy",
+                "s3:DeleteBucketPolicy",
+                "s3:GetBucketPolicy"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "DynamoDBDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:DeleteTable",
+                "dynamodb:CreateTable"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudFrontDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:CreateOriginAccessControl",
+                "cloudfront:GetOriginAccessControl",
+                "cloudfront:UpdateOriginAccessControl",
+                "cloudfront:DeleteOriginAccessControl",
+                "cloudfront:CreateDistribution",
+                "cloudfront:UpdateDistribution",
+                "cloudfront:GetDistribution",
+                "cloudfront:GetDistributionConfig",
+                "cloudfront:DeleteDistribution",
+                "cloudfront:TagResource",
+                "cloudfront:UntagResource",
+                "cloudfront:ListTagsForResource",
+                "cloudfront:CreateInvalidation"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "IAMDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DeleteRole",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "iam:ListRolePolicies",
+                "iam:ListAttachedRolePolicies",
+                "iam:AttachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:PassRole"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "APIGatewayDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:POST",
+                "apigateway:GET",
+                "apigateway:DELETE",
+                "apigateway:TagResource"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "LambdaDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:GetFunction",
+                "lambda:DeleteFunction",
+                "lambda:CreateFunction",
+                "lambda:AddPermission",
+                "lambda:RemovePermission"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SNSDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "sns:CreateTopic",
+                "sns:DeleteTopic",
+                "sns:GetTopicAttributes",
+                "sns:SetTopicAttributes",
+                "sns:ListSubscriptionsByTopic",
+                "sns:Subscribe",
+                "sns:Unsubscribe",
+                "sns:TagResource",
+                "sns:UntagResource"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudWatchDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:PutMetricAlarm",
+                "cloudwatch:DeleteAlarms",
+                "cloudwatch:DescribeAlarms",
+                "cloudwatch:DescribeAlarmHistory",
+                "cloudwatch:ListTagsForResource",
+                "cloudwatch:TagResource",
+                "cloudwatch:UntagResource"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "Route53Deploy",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets",
+                "route53:ChangeTagsForResource",
+                "route53:ListResourceRecordSets",
+                "route53:GetHostedZone",
+                "route53:ListTagsForResource",
+                "route53:GetChange"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ACMDeploy",
+            "Effect": "Allow",
+            "Action": [
+                "acm:DescribeCertificate",
+                "acm:ListTagsForCertificate"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

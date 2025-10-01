@@ -1,4 +1,4 @@
-name: Deploy Cloud Resume Challenge
+name: Deploy Serverless Website
 
 on:
   push:
@@ -10,12 +10,12 @@ permissions:
 
 env:
   AWS_REGION: eu-west-2
-  TEMPLATE_BUCKET_NAME: resume-challenge-website-templates
-  STACK_NAME: resume-challenge-website
-  DOMAIN_NAME: staging.eivistamos.co.uk
+  TEMPLATE_BUCKET_NAME: serverless-website-templates
+  STACK_NAME: serverless-website
+  DOMAIN_NAME: eivistamos.co.uk
   STAGE_NAME: prod
-  DYNAMO_DB_TABLE_NAME: visitor-counter
-  IAM_GITHUB_ROLE_NAME: cloud-resume-github
+  DYNAMO_DB_TABLE_NAME: visitor-counter #This name is referenced in the Lambda Function code. Be careful.
+  IAM_GITHUB_ROLE_NAME: serverless-website-github
 
 jobs:
 

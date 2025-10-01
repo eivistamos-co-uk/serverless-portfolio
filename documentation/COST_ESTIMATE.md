@@ -1,6 +1,6 @@
 # Monthly Cost Estimate
 
-- Route 53 (1x Hosted Zone): ~$0.50
+- Route 53 (1x Hosted Zone Prerequisite): ~$0.50
 - CloudFront: ~$0
 - S3: ~$0
 - Lambda: ~$0

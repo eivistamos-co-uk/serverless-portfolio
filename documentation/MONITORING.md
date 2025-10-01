@@ -4,5 +4,5 @@
 - **API Gateway logs**: JSON logs in CloudWatch
 - **DynamoDB metrics**: read/write capacity, latency
 - **Alarms**:
-  - CRC-Lambda-Errors → SNS ($ALERT_EMAIL)
-  - API Gateway Errors -> SNS ($ALERT_EMAIL)
+  - Lambda-Errors → SNS to the Email for Alerts
+  - API Gateway Errors -> SNS to the Email for Alerts

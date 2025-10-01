@@ -1,8 +1,15 @@
 # CI/CD Pipeline
 
 - GitHub Actions workflow added in `.github/workflows/deploy.yml`.
-- On each push to `main`:
-  1. Uploads nested stack templates to backend(templates/lambda) bucket.
-  2. Deploys CloudFormation main.yaml stack.
-  3. Syncs frontend(site) files to S3 site bucket.
 - Secrets stored in GitHub Actions Secrets for security.
+- On each push to `main`:
+  1. Runs lint job to check and validate the CloudFormation infrastructure templates
+  2. Runs package job to:
+    - Create Template bucket if missing.
+    - Upload infrastructure templates and lambda code to bucket.
+  3. Runs deploy job to:
+    - Deploy infrastrucutre using the main.yaml file.
+    - Prepare the API URL to be used for the visitor counter.
+    - Sync site files (HTML/CSS/JS) to S3 bucket.
+    - Invalidate CloudFront cache to show up to date site files.
+
