@@ -77,7 +77,8 @@ Restrict this to only the specific roles created for this project:
                 "s3:DeleteBucket",
                 "s3:PutBucketPolicy",
                 "s3:DeleteBucketPolicy",
-                "s3:GetBucketPolicy"
+                "s3:GetBucketPolicy",
+                "s3:DeleteObject"
             ],
             "Resource": "*"
         },
