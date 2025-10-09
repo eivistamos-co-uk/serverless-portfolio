@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PE4ZN3883X"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-PE4ZN3883X');
+        </script>
+        <title>Eivis Tamos - Serverless Website + CI/CD + IaC</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="A serverless, AWS-hosted resume website demonstrating full-stack cloud architecture, CI/CD pipelines, and infrastructure as code.">
+        <meta property="og:title" content="Eivis Tamos - Serverless Website + CI/CD + IaC">
+        <meta property="og:description" content="A serverless, AWS-hosted resume website demonstrating full-stack cloud architecture, CI/CD pipelines, and infrastructure as code.">
+        <meta property="og:image" content="https://eivistamos.co.uk/images/architecture-detailed.jpg">
+        <meta property="og:image:alt" content="Detailed flow diagram from the project page. Shows CI/CD pipeline, request/response path, logging, and permissions.">
+        <meta property="og:url" content="https://eivistamos.co.uk/projects/serverless-portfolio">
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+            rel="stylesheet">
+        <script src="../script.js" defer></script> <!-- Handles visitor counter API requests -->
+        <script type="application/ld+json">
+            {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Eivis Tamos",
+            "jobTitle": "AWS Certified Solutions Architect",
+            "url": "https://eivistamos.co.uk",
+            "sameAs": [
+                "https://www.linkedin.com/in/eivistamos",
+                "https://github.com/eivistamos-co-uk"
+            ]
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+        <!-- Social links to GitHub and LinkedIn for professional visibility -->
+
+        <div class="button-group" style="justify-content: center;">
+            <a href="https://eivistamos.co.uk" target="_blank" rel="noopener noreferrer">
+                <button id="home-button" class="button-header" type="button">Eivis Tamos</button>
+            </a>
+            <a href="https://eivistamos.co.uk/#projects">
+                <button class="button-header" type="button">Projects</button>
+            </a>
+            <a href="https://www.linkedin.com/in/eivistamos" target="_blank" rel="noopener noreferrer">
+                <button class="button-header" type="button">About</button>
+            </a>
+            <a href="https://www.linkedin.com/in/eivistamos" target="_blank" rel="noopener noreferrer">
+                <button class="button-header" type="button">Contact</button>
+            </a>
+        </div>
+        <div class="button-group">
+            <a href="https://github.com/eivistamos-co-uk" target="_blank" rel="noopener noreferrer">
+                <button
+                    style="background: url(../images/github.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                    class="button-mini" type="button"></button>
+            </a>
+            <a href="https://www.linkedin.com/in/eivistamos" target="_blank" rel="noopener noreferrer">
+                <button
+                    style="background: url(../images/linkedin.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                    class="button-mini" type="button"></button>
+            </a>
+        </div>
+    </header>
+        <main id="project-page-main">
+
+<div class="project-page-title">            
+<h2>Project</h2>
+<h1 style="text-align: center;">Serverless Website + CI/CD + IaC</h1>
+</div>
+
+<div id="project-page-flex">
+            <!-- Detailed project case study -->
+
+
+            <div id="project" class="project-content content ">
+                <div id="project-intro" style="display: flex; justify-content: space-between; flex-direction: column;">
+                    <h2 class="project-heading">Overview</h2>
+                    <p style="margin-bottom: 0px;"><b>Automated CI/CD</b> using GitHub Actions and CloudFormation to deploy
+                        a static frontend on S3 + CloudFront with OAC.<br><b>Serverless backend:</b> API Gateway -> Lambda
+                        -> DynamoDB powering a visitor counter.<br><b>Observability:</b> centralised CloudWatch logs + SNS
+                        alerts for incidents.
+                    </p>
+                </div>
+                <!-- Project sections summarising architecture, workflow, counter, lessons, links -->
+                <div class="project-grid">
+                    <div id="architecture" class="project-card one">
+                        <h3>1. Architecture</h3>
+                        <p>
+                            The architecture ensures global performance, scalability, and secure delivery: CloudFront
+                            accelerates static content, Route 53 provides custom domain management, and DynamoDB +
+                            Lambda handle dynamic traffic tracking.
+                        </p>
+                    </div>
+                    <div id="diagram" class="project-card two">
+                        <h3>2. High-Level Diagram</h3>
+                        <p>This overview shows the core AWS services used, grouped by their role in the solution.</p>
+                        <a href="../images/architecture-overview.svg" target="_blank">
+                        <img class="center-img" src="../images/architecture-overview.jpg" alt="High-Level Diagram of solution, grouping AWS services together by their function.">
+                        </a>
+                        <br>
+                        <a href="../images/architecture-overview.svg"  target="_blank">
+                        <button class="button-basic" type="button">View Diagram</button>
+                        </a>
+                    </div>
+                    <div id="detailed" class="project-card one">
+                        <h3>3. Detailed Flow </h3>
+                        <p>Covers CI/CD pipeline, request/response path, logging, and
+                            permissions.
+                        </p>
+                        <a href="../images/architecture-detailed.svg" target="_blank">
+                        <img class="center-img" src="../images/architecture-detailed.jpg" alt="Detailed Flow diagram of solution, showing user, development, backend, and monitoring paths."
+                            style="width:100%">
+                        </a>
+                        <br>
+                        <a href="../images/architecture-detailed.svg"  target="_blank">
+                        <button class="button-basic" type="button">View Diagram</button>
+                        </a>
+                    </div>
+                    <div id="workflow" class="project-card two">
+                        <h3>4. Workflow</h3>
+                        <p>
+                            A GitHub Actions pipeline automates deployments, reducing manual errors and ensuring
+                            production consistency which are key practices for enterprise-scale cloud operations.
+                        </p>
+                    </div>
+                    <div id="counter" class="project-card one">
+                        <h3>5. Counter</h3>
+                        <!-- Dynamic visitor counter powered by Lambda + DynamoDB -->
+                        <p>Visitor counter:</p>
+                        <p id="count">Powered by Lambda + DynamoDB</p>
+                        <p>
+                            A lightweight serverless app demonstrates event-driven design, showing how Lambda + DynamoDB
+                            integrate seamlessly for real-time features.
+                        </p>
+                    </div>
+                    <div id="lessons" class="project-card two">
+                        <h3>6. Lessons Learned</h3>
+                        <ul>
+                            <li>Built <b>CI/CD pipeline</b> to automatically deploy and validate stacks, reducing manual
+                                deployment time from hours to minutes.
+                            </li>
+                            <li>Diagnosed complex <b>IAM policy</b> issues, striking the right balance between automation and
+                                security whilst reducing failures.
+                            </li>
+                            <li>Improved observability by centralising logs in <b>CloudWatch</b> and adding <b>SNS alerts</b> to
+                                reduce Mean Time To Detect.
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="links" class="project-card one">
+                        <h3>7. Links</h3>
+                        <div class="button-group" style="flex-wrap:wrap;">
+                            <a href="https://www.linkedin.com/in/eivistamos" target="_blank" rel="noopener noreferrer">
+                                <button id="connect-on-linkedin" class="button-prio" type="button">View LinkedIn</button>
+                            </a>
+                            <a href="https://github.com/eivistamos-co-uk/Serverless-Website-CI-CD-IaC" target="_blank" rel="noopener noreferrer">
+                                <button class="button-basic" type="button">View GitHub</button>
+                            </a>
+                            <a href="https://www.credly.com/badges/821b602d-ee1a-49b7-8ba9-47135fe57c1d" target="_blank" rel="noopener noreferrer">
+                                <button class="button-basic" type="button">Verify AWS Badge</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex: 1;">
+                <h2 style="margin-bottom: 20px;">My Other Projects</h2>
+            <div class="contents">
+                <!-- Project snapshot overview -->
+
+                <div class="project-content content projects-max-width cardhover">
+                    <div>
+                    <div class="icon-title-holder">
+                        <div class="project-icon-title">
+                                                    <a href="./projects/terraform-infrastructure.html">
+                            <img src="../images/terraform.png" alt="Terraform Logo"
+                                style="width:100px;height:100px;border-width:0px;">
+                            </a>
+                        <h3 class="card-min-width"">Terraform Infrastructure</h3>
+
+                        </div>
+                    </div>
+                    <p>Terraform, GitHub Actions CI/CD + DynamoDB State Locking + S3, CloudFront, Route 53 hosting & delivery.
+                    </p>
+                    </div>
+                    <div class="button-group">
+
+
+                            <button id="coming-soon" class="button-basic" type="button">Coming Soon</button>
+
+
+                        <a href="https://terraform.eivistamos.co.uk" target="_blank" rel="noopener noreferrer">
+                            <button class="button-basic" type="button">Launch</button>
+                        </a>
+
+                        <a href="https://github.com/eivistamos-co-uk/terraform-serverless-website" target="_blank" rel="noopener noreferrer">
+                            <button
+                                style="background: url(../images/github.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                                class="button-mini" type="button"></button>
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="content projects-max-width cardhover">
+                    <div>
+                    <div class="icon-title-holder">
+                        <div class="project-icon-title">
+                                                    <a href="https://eivistamos.co.uk">
+                            <img src="../images/Kubernetes.png" alt="Kubernetes Logo"
+                                style="width:100px;height:100px;border-width:0px;">
+                            </a>
+                        <h3 class="card-min-width">Kubernetes via EKS</h3>
+
+                        </div>
+                    </div>
+                    <p>My upcoming project on Kubernetes.</p>
+                    </div>
+                    <div class="button-group">
+
+                            <button id="coming-soon" class="button-basic" type="button">Coming Soon</button>
+
+                        <a href="https://github.com/eivistamos-co-uk" target="_blank" rel="noopener noreferrer">
+                            <button
+                                style="background: url(../images/github.png); background-position:center; background-repeat: no-repeat; background-size: 30px;"
+                                class="button-mini" type="button"></button>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+            </div>
+
+            </div>
+        </div>
+        </main>
+    </body>
+</html>

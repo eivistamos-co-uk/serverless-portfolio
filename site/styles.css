@@ -1,32 +1,95 @@
+
+
+.projects-max-width {
+	max-width: 560px;
+}
+
+#project-page-main {
+	height: unset;
+}
+
+#project {
+	flex: 5;
+}
+
+#project-page-flex {
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: flex-start;
+	gap: 2em;
+}
+
+.project-page-title {
+	margin-bottom: 50px;
+}
+
+.card-min-width{
+	min-width: 294px;
+}
+
+.icon-title-holder{
+	display: flex; 
+	justify-content: flex-start;
+}
+
+main{
+	  height: 100vh;           /* full viewport height */
+  display: flex;
+  flex-direction: column;  /* stack hero and projects vertically */
+  justify-content: space-between; /* hero top, projects bottom */
+}
+
+#projects{
+	justify-self: flex-end;
+	margin-bottom: 100px;
+}
+
 header {
+background: #FFFFFF;
+background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 30%, rgba(237, 83, 83, 0) 100%);
 	display: flex;
 	gap: 10px;
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	flex-direction: row;
 	align-items: center;
-	padding: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
 	position: sticky;
 	top: 0px
 }
 
+header p {
+	margin-top: 0px;
+	margin-bottom: 0px;
+		font-family: "Space Mono", monospace;
+		font-weight: bold;
+}
+
 #hero {
 	display: flex;
-	gap: 0px;
-	flex-wrap: wrap;
+	gap: 30px;
+	flex-wrap: nowrap;
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
 	margin: 50px;
 	margin-top: 0px;
+	 justify-self: flex-start;
+	 height: 70vh;
+}
+
+button{
+	text-wrap-mode: nowrap;
 }
 
 .button-group {
 	display: flex;
 	gap: 10px;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
 }
 
@@ -36,10 +99,11 @@ header {
 	border-radius: 20px;
 	border: none;
 	color: #fff;
-	font-size: 1.5em;
+	font-size: 1em;
 	font-family: "Roboto", sans-serif;
 	border-style: solid;
 	border-width: 2px;
+	cursor: pointer;
 }
 
 .button-basic {
@@ -48,10 +112,39 @@ header {
 	border-radius: 20px;
 	border: 1px solid #ccc;
 	color: #000;
-	font-size: 1.5em;
+	font-size: 1em;
 	font-family: "Roboto", sans-serif;
 	border-style: solid;
 	border-width: 2px;
+	cursor: pointer;
+}
+
+#coming-soon:hover {
+	background-color: #d1d1d1;
+	cursor:default;
+	border-color: #d1d1d1;
+	font-weight: normal;
+}
+
+#coming-soon {
+	background-color: #e9e9e9;
+	cursor:default;
+	border-color: #d1d1d1;
+	font-weight: normal;
+}
+
+.button-header {
+	background-color: #ffffff00;
+	border: 1px solid #ffffff00;
+	color: #000;rgb(255, 255, 255)rgba(255, 255, 255, 0);
+	font-size: 1em;
+	font-family: "Space Mono", monospace;
+	cursor: pointer;
+}
+
+#home-button {
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
 .button-mini {
@@ -83,7 +176,7 @@ header {
 	/* space between columns */
 	flex-wrap: wrap;
 	/* allows wrapping on smaller screens */
-	justify-content: flex-start;
+	justify-content: center;
 	height: fit-content;
 }
 
@@ -98,17 +191,23 @@ header {
 	padding: 40px;
 	border-radius: 5px;
 	box-shadow: 5px 5px #e6e6e6;
-	padding-top: 20px;
+	display: flex;
+	flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    align-items: flex-start;
+	justify-content: space-between;
+}
+
+.cardhover:hover {
+	transform: translateY(-4px);
+	box-shadow: 10px 10px #ececec;
+
 }
 
 main {
 	line-height: 1.7;
-	padding: 20px;
-}
-
-#project {
-	margin: auto;
-	margin-top: 30px;
+	padding: 50px;
 }
 
 .rightAlign {
@@ -125,17 +224,18 @@ main {
 }
 
 h1 {
-	font-size: 4rem;
+	font-size: 3.5rem;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
 h2 {
-	font-size: 2em;
+	font-size: 1.5em;
+	text-align: center;
 }
 
 h3 {
-	font-size: 1.75em;
+	font-size: 1.25em;
 }
 
 h1,
@@ -146,6 +246,9 @@ a {
 	font-family: "Space Mono", monospace;
 	color: #313131;
 	font-weight: bold;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	
 }
 
 body {
@@ -175,29 +278,61 @@ body {
 p,
 li {
 	font-family: "Roboto", sans-serif;
-	font-size: 1.5em;
+	font-size: 1em;
 	color: #4d4d4d;
 }
 
-#about-me-intro {
+.project-icon-title{
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	flex-wrap: wrap;
+	gap: 20px;
+	align-items: center;
 }
 
 .one {
 	background-color: #fafafa;
 }
 
+.project-heading{
+	text-align: left;
+}
+
 @media (max-width: 1200px) {
 
 	/* Smaller Screens */
+
+
+	#project-page-flex{
+		flex-direction:column;
+	}
+
+	.project-icon-title{
+		flex-direction: column;
+	}
+
+	.icon-title-holder{
+		justify-content: center;
+	}
+
+	main {
+		height: 100%;
+	}
+
+	#hero {
+		height: 30vh;
+	}
+	
 	h1 {
 		font-size: 3rem;
 	}
 
+	.project-heading{
+	text-align: center;
+}
+
 	h2 {
-		font-size: 1.7rem;
+		font-size: 1.5rem;
 		text-align: center;
 	}
 
@@ -224,6 +359,7 @@ li {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		border-top: 10px solid #0c0cff00;
 	}
 
 	#about-me-intro {
@@ -247,27 +383,24 @@ li {
 		color: #fff;
 	}
 
-	.project-card {
-		border-left: 0px;
-		border-top: 5px solid #eeeeee;
-		align-items: center;
-		display: flex;
-		flex-direction: column;
-	}
 }
 
-@media (max-width: 800px) {
-
-	/* Smallerer Screens */
-	#highlights {
-		flex-direction: column;
-	}
-
-}
-
-@media (max-width: 500px) {
+@media (max-width: 550px) {
 
 	/* Smallest Screens */
+
+	.project-page-title{
+		margin-top:20px;
+	}
+
+	main{
+		padding: 20px;
+	}
+
+	#project{
+		padding: 5px;
+	}
+	
 	h1 {
 		font-size: 2rem;
 	}
@@ -315,6 +448,7 @@ li {
 
 	.button-group {
 		justify-content: center;
+		flex-wrap: wrap;
 	}
 
 	#email-me-button {
@@ -336,13 +470,23 @@ li {
 	#hero {
 		margin: 0px;
 		margin-bottom: 50px;
+		height: 45vh;
 	}
 
 	#project-intro {
 		margin: 30px;
 	}
+}
 
-	#project {
-		padding: 0px;
+@media (max-width: 390px) {
+
+	/* Tiny Screens */
+	main{
+		padding: 20px;
 	}
+
+	.card-min-width{
+		min-width: unset;
+	}
+
 }
