@@ -8,4 +8,8 @@
     <loc>https://eivistamos.co.uk/projects/serverless-portfolio</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://eivistamos.co.uk/projects/terraform-infrastructure</loc>
+    <priority>0.8</priority>
+  </url>
 </urlset>

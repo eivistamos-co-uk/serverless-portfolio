@@ -1,4 +1,33 @@
+.about-image{
+	width:200px;
+	height:200px;
+	border-width:0px;
+}
+#profile-images{
+	display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: flex-start;
+}
+	
+	#mobile-badge{
+		display:none;
+	}
 
+#summary {
+	text-align: left;
+}
+
+.about-me-sidebar{
+	display:flex;
+	flex-direction: column;
+	gap: 2em;
+	flex: 2;
+}
+
+.side-bar {
+	flex-direction: column;
+}
 
 .projects-max-width {
 	max-width: 560px;
@@ -282,6 +311,22 @@ li {
 	color: #4d4d4d;
 }
 
+.about-me-summary{
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: nowrap;
+	gap: 20px;
+	align-items: center;
+}
+
+.cert{
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: nowrap;
+	gap: 20px;
+	align-items: center;
+}
+
 .project-icon-title{
 	display: flex;
 	justify-content: flex-start;
@@ -302,9 +347,21 @@ li {
 
 	/* Smaller Screens */
 
+	#mobile-badge{
+		display:unset;
+	}
+
+	#summary {
+	text-align: center;
+}
+
+	.about-me-summary {
+		flex-direction:column;
+	}
 
 	#project-page-flex{
 		flex-direction:column;
+		align-items: center;
 	}
 
 	.project-icon-title{
@@ -317,6 +374,7 @@ li {
 
 	main {
 		height: 100%;
+		padding: 30px;
 	}
 
 	#hero {
@@ -388,6 +446,15 @@ li {
 @media (max-width: 550px) {
 
 	/* Smallest Screens */
+
+	.cert{
+		flex-direction: column;
+	}
+
+	.about-image {
+    width: 150px;
+    height: 150px;
+	}
 
 	.project-page-title{
 		margin-top:20px;
@@ -487,6 +554,11 @@ li {
 
 	.card-min-width{
 		min-width: unset;
+	}
+
+	.about-image {
+    width: 100px;
+    height: 100px;
 	}
 
 }
